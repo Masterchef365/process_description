@@ -1,6 +1,7 @@
 % Page formatting
 \documentclass[12pt]{article}
 \usepackage[margin=1in]{geometry}
+\usepackage[document]{ragged2e}
 
 % Enumerations
 \usepackage{enumitem}
@@ -34,7 +35,7 @@
 % Section boxes
 \newcommand{\sectionbox}[2]{%
     \colorbox{#1}{%
-        \parbox{\dimexpr\textwidth-6pt}{%
+        \parbox{\dimexpr\textwidth-6pt}{% 6pt is a Hack lol
             \sectionheaderfmt{#2}%
 }}}
 
@@ -64,6 +65,7 @@
 \thispagestyle{empty}
 
 \newpage
+
 %% Table of contents %%
 
 \pagenumbering{roman}
@@ -72,17 +74,20 @@
 \sffamily \tableofcontents \rmfamily
 
 \newpage
-%% List of figures
+%% List of figures %%
 
 \sffamily \listoffigures \rmfamily
 
 \newpage
 
+%% Start of document %%
+
 \pagenumbering{arabic}
 
 \section{Introduction}
 Transport Layer Security (TLS) is a protocol that facilitates privacy and authentication of messages (RFC 5246, 1). This document provides an overview of the TLS handshake subprocedure. This document does not cover implementation details, message transport, or specific ciphers. This document is arranged as follows: First, background information on TLS will be provided, followed by the two stages of the handshake procedure: Method Agreement, and Key Exchange \& Authentication. The conclusion will describe the utilization of the secure channel that the handshake establishes. 
-Background information
+
+\section{Background information}
 TLS is a protocol used to secure private and untampered communications on the web (RFC 5246, 6, 78). For example, HTTPS is the original HTTP (HyperText Transfer Protocol) transmitted over a TLS transport instead of TCP (HTTP over TLS, 1). TLS is not a specific cipher or encryption method in itself; it is a standard container format that facilitates the use of a set of existing encryption methods (RFC 8446, 7).
 
 \section{The TLS handshaking protocol}
@@ -92,7 +97,7 @@ First, a protocol version, cipher suite, and compression method is established. 
 
 The client presents an array of protocol versions and ciphers it is willing to use, and the server selects one in response. Optionally, the pair may resume a prior session instead.
 
-\begin{enumerate}
+\begin{enumerate}[rightmargin=1cm]
     \item The client begins the conversation by sending a ‘ClientHello’ message, which contains information about what protocols it is capable of communicating over (RFC 8446, 12, RFC 5246, 34). The message includes the specific version of TLS that is intended to be used, encryption schemes the client supports, and compression methods available (RFC 8446, 12, RFC 5246, 34). Because encryption has not been established at this stage, this message is unencrypted; a MitM (Man-in-the-Middle) attack could be used to weaken the protocol by selecting for older versions of TLS or specific broken ciphers (RFC 5246, 34, 97). It is the responsibility of the applications using TLS to ensure that they do not allow communication over outdated protocols deemed insecure (RFC 5246, 34). Newer versions of TLS help to mitigate these attacks (See step 3).
     \item Optionally, the client sends a specialized ‘Resume’ message that describes a previous connection from which encryption and protocol parameters are to be reused (RFC 5246, 36, RFC 8446, 39). Following this message, no further authentication is needed for the session, and communication can begin immediately (RFC 5246, 35, 36). This can help to decrease the overhead of TLS in contexts where several concurrent or successive connections are established (RFC 8446, 74).
     \item The server picks from the protocol versions, ciphers, and compression methods offered by the client and sends its choice for each. Among the choices given, the server always picks the safest available (RFC 5246, 41, 97). In TLS 1.3, if a MitM protocol downgrade attack is suspected, the server will attempt to expose it by sending the client some false info that signals that it actually supports a safer protocol and that communication should terminate (RFC 8446, 32). 
@@ -101,7 +106,7 @@ The client presents an array of protocol versions and ciphers it is willing to u
 \subsection{Stage II: Key exchange and authentication}
 The server sends its certificate and key, and the client (having verified said certificate) sends its own key and optionally its certificate if requested.
 
-\begin{enumerate}
+\begin{enumerate}[rightmargin=1cm]
     \item The server sends its certificate. The certificate proves mathematically that the public key contained in the following message originates from the server the client intended to connect to and that the server’s key was signed by a Certificate Authority with which the client is familiar and trusts (What Are Certificate Authorities \& Trust Hierarchies?, 1). For a server to be trusted by clients, it must obtain a certificate from a trusted source with which to sign its key (GlobalSign, 1). It is the client’s responsibility to verify the server’s authenticity using this certificate (RFC 5246, 85).
     \item The server sends its key exchange message. This message contains the cryptographic information the client needs to compute a shared key with which to cipher and decipher information (RFC 5246, 50, RFC 8446, 31). This message may be omitted if there was enough information in the last transmission, to avoid overhead (RFC 5246, 50).
     \item Optionally, the server sends the client an authentication request (RFC 5246, 35, RFC 8446, 12). This request is an additional security measure requiring trust on the client side, but does incur overhead in the form of another message from the client side (RFC 8446, 12).
@@ -111,12 +116,18 @@ The server sends its certificate and key, and the client (having verified said c
 \section{Conclusion}
 Following the success of the above procedure, the TLS connection is now initialized and ready for messaging over the TLS record protocol (RFC 8446, 71). Application-level protocols such as FTP, HTTP, SMTP and others may then utilize the record protocol to send messages transparently as if using the underlying TCP stream, but with the guarantee of encryption and authentication initialized by the handshake procedure (RFC 5246, 78).
 
+\newpage
+
 \section{Works cited}
-%\begin{description}[leftmargin=!,labelindent=5pt,itemindent=-15pt]
-%    \item ``HTTP Over TLS.'' IETF Tools, May 2000. https://tools.ietf.org/html/rfc2818.
-%    \item ``What Are Certificate Authorities \& Trust Hierarchies?'' What is a Certificate Authority? Globalsign. Accessed November 14, 2019. https://www.globalsign.com/en/ssl-information-center/what-are-certification-authorities-trust-hierarchies/.
-%    \item ``The Transport Layer Security (TLS) Protocol Version 1.3.'' IETF Tools. IETF, August 2018. https://tools.ietf.org/html/rfc8446. 
-%    \item ``The Transport Layer Security (TLS) Protocol Version 1.2.'' IETF Tools. IETF, August 2008. https://tools.ietf.org/html/rfc5246.
-%\end{description}
+\begin{description}[leftmargin=!,itemindent=-15pt]
+    \item ``HTTP Over TLS.'' IETF Tools, May 2000. %https://tools.ietf.org/html/rfc2818.
+    \item ``What Are Certificate Authorities \& Trust Hierarchies?'' What is a Certificate Authority? Globalsign. Accessed November 14, 2019. %https://www.globalsign.com/en/ssl-information-center/what-are-certification-authorities-trust-hierarchies/.
+    \item ``The Transport Layer Security (TLS) Protocol Version 1.3.'' IETF Tools. IETF, August 2018. %https://tools.ietf.org/html/rfc8446. 
+    \item ``The Transport Layer Security (TLS) Protocol Version 1.2.'' IETF Tools. IETF, August 2008. %https://tools.ietf.org/html/rfc5246.
+\end{description}
+
+\newpage
+
+\section{Bibliography}
 
 \end{document}

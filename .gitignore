@@ -6,4 +6,5 @@
 *.synctex.gz
 *.toc
 *.lof
+*.out
 notes.txt
