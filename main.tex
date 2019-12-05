@@ -48,7 +48,7 @@
 
 \begin{document}
 
-% 
+%% Title page %%
 \noindent
 \titlebox{sectioncolor}{\large An Overview of the TLS Handshaking Protocol\hspace{5em}}
 
@@ -60,11 +60,25 @@
 \noindent
 \titlebox{sectioncolor}{\large Duncan Freeman}
 
+% No page numbering on first page
+\thispagestyle{empty}
+
 \newpage
+%% Table of contents %%
+
+\pagenumbering{roman}
+\setcounter{page}{2}
 
 \sffamily \tableofcontents \rmfamily
 
 \newpage
+%% List of figures
+
+\sffamily \listoffigures \rmfamily
+
+\newpage
+
+\pagenumbering{arabic}
 
 \section{Introduction}
 Transport Layer Security (TLS) is a protocol that facilitates privacy and authentication of messages (RFC 5246, 1). This document provides an overview of the TLS handshake subprocedure. This document does not cover implementation details, message transport, or specific ciphers. This document is arranged as follows: First, background information on TLS will be provided, followed by the two stages of the handshake procedure: Method Agreement, and Key Exchange \& Authentication. The conclusion will describe the utilization of the secure channel that the handshake establishes. 
