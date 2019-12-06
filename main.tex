@@ -104,10 +104,11 @@ First, a protocol version, cipher suite, and compression method is established. 
 The client presents an array of protocol versions and ciphers it is willing to use, and the server selects one in response. Optionally, the pair may resume a prior session instead.
 
 \begin{figure}[ht]
-    \begin{minipage}[c]{0.55\textwidth}
+    \hspace{0.75cm}
+    \begin{minipage}[c]{0.53\textwidth}
         \includegraphics[width=\textwidth]{tls_protocol.png}
     \end{minipage}
-    \begin{minipage}[c]{0.4\textwidth}
+    \begin{minipage}[c]{0.3\textwidth}
         \caption{TLS Handshake}%
         \label{Handshake}%
         \sffamily\footnotesize The TLS Handshake procedure is composed of a small number of negotiating messages that together form the configuration of the resultant message layer.
@@ -125,7 +126,8 @@ The client presents an array of protocol versions and ciphers it is willing to u
 The server sends its certificate and key, and the client (having verified said certificate) sends its own key and optionally its certificate if requested.
 
 \begin{figure}[ht]
-    \begin{minipage}[c]{0.5\textwidth}
+    \hspace{0.75cm}
+    \begin{minipage}[c]{0.45\textwidth}
         \includegraphics[width=\textwidth]{ca_diagram.png}
     \end{minipage}
     \begin{minipage}[c]{0.4\textwidth}
