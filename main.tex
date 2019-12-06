@@ -14,8 +14,14 @@
 \usepackage{tgbonum}
 \usepackage{avant}
 
+% Figures
+\usepackage{graphicx}
+\usepackage[font={bf,sf,footnotesize},justification=justified,singlelinecheck=false]{caption}
+
 % Debug
 %\usepackage{showframe}
+
+
 
 % Section colorings
 \definecolor{sectioncolor}{HTML}{3399ff} 
@@ -76,7 +82,7 @@
 \newpage
 %% List of figures %%
 
-\sffamily \listoffigures \rmfamily
+\sffamily \textbf{\listoffigures} \rmfamily
 
 \newpage
 
@@ -97,8 +103,20 @@ First, a protocol version, cipher suite, and compression method is established. 
 
 The client presents an array of protocol versions and ciphers it is willing to use, and the server selects one in response. Optionally, the pair may resume a prior session instead.
 
+\begin{figure}[ht]
+    \begin{minipage}[c]{0.55\textwidth}
+        \includegraphics[width=\textwidth]{tls_protocol.png}
+    \end{minipage}
+    \begin{minipage}[c]{0.4\textwidth}
+        \caption{TLS Handshake}%
+        \label{Handshake}%
+        \sffamily\footnotesize The TLS Handshake procedure is composed of a small number of negotiating messages that together form the configuration of the resultant message layer.
+        \scriptsize\textcopyright\rmfamily\textit{Carnegie Mellon University 2012}
+    \end{minipage}
+\end{figure}
+
 \begin{enumerate}[rightmargin=1cm]
-    \item The client begins the conversation by sending a ‘ClientHello’ message, which contains information about what protocols it is capable of communicating over (RFC 8446, 12, RFC 5246, 34). The message includes the specific version of TLS that is intended to be used, encryption schemes the client supports, and compression methods available (RFC 8446, 12, RFC 5246, 34). Because encryption has not been established at this stage, this message is unencrypted; a MitM (Man-in-the-Middle) attack could be used to weaken the protocol by selecting for older versions of TLS or specific broken ciphers (RFC 5246, 34, 97). It is the responsibility of the applications using TLS to ensure that they do not allow communication over outdated protocols deemed insecure (RFC 5246, 34). Newer versions of TLS help to mitigate these attacks (See step 3).
+    \item The client begins the conversation by sending a ‘ClientHello’ message (See Figure \ref{Handshake}), which contains information about what protocols it is capable of communicating over (RFC 8446, 12, RFC 5246, 34). The message includes the specific version of TLS that is intended to be used, encryption schemes the client supports, and compression methods available (RFC 8446, 12, RFC 5246, 34). Because encryption has not been established at this stage, this message is unencrypted; a MitM (Man-in-the-Middle) attack could be used to weaken the protocol by selecting for older versions of TLS or specific broken ciphers (RFC 5246, 34, 97). It is the responsibility of the applications using TLS to ensure that they do not allow communication over outdated protocols deemed insecure (RFC 5246, 34). Newer versions of TLS help to mitigate these attacks (See step 3).
     \item Optionally, the client sends a specialized ‘Resume’ message that describes a previous connection from which encryption and protocol parameters are to be reused (RFC 5246, 36, RFC 8446, 39). Following this message, no further authentication is needed for the session, and communication can begin immediately (RFC 5246, 35, 36). This can help to decrease the overhead of TLS in contexts where several concurrent or successive connections are established (RFC 8446, 74).
     \item The server picks from the protocol versions, ciphers, and compression methods offered by the client and sends its choice for each. Among the choices given, the server always picks the safest available (RFC 5246, 41, 97). In TLS 1.3, if a MitM protocol downgrade attack is suspected, the server will attempt to expose it by sending the client some false info that signals that it actually supports a safer protocol and that communication should terminate (RFC 8446, 32). 
 \end{enumerate}
@@ -106,8 +124,20 @@ The client presents an array of protocol versions and ciphers it is willing to u
 \subsection{Stage II: Key exchange and authentication}
 The server sends its certificate and key, and the client (having verified said certificate) sends its own key and optionally its certificate if requested.
 
+\begin{figure}[ht]
+    \begin{minipage}[c]{0.5\textwidth}
+        \includegraphics[width=\textwidth]{ca_diagram.png}
+    \end{minipage}
+    \begin{minipage}[c]{0.4\textwidth}
+        \caption{Certificate Authority}
+        \label{CA}%
+        \sffamily\footnotesize The Certificate Authority validates the host's and/or client's public key using it's own private key, which protects the Applicant's connection against tampering.
+        \scriptsize\textcopyright\rmfamily\textit{SSL.com 2019}
+    \end{minipage}
+\end{figure}
+
 \begin{enumerate}[rightmargin=1cm]
-    \item The server sends its certificate. The certificate proves mathematically that the public key contained in the following message originates from the server the client intended to connect to and that the server’s key was signed by a Certificate Authority with which the client is familiar and trusts (What Are Certificate Authorities \& Trust Hierarchies?, 1). For a server to be trusted by clients, it must obtain a certificate from a trusted source with which to sign its key (GlobalSign, 1). It is the client’s responsibility to verify the server’s authenticity using this certificate (RFC 5246, 85).
+    \item The server sends its certificate. The certificate proves mathematically that the public key contained in the following message originates from the server the client intended to connect to and that the server’s key was signed by a Certificate Authority (See Figure \ref{CA}) with which the client is familiar and trusts (What Are Certificate Authorities \& Trust Hierarchies?, 1). For a server to be trusted by clients, it must obtain a certificate from a trusted source with which to sign its key (GlobalSign, 1). It is the client’s responsibility to verify the server’s authenticity using this certificate (RFC 5246, 85).
     \item The server sends its key exchange message. This message contains the cryptographic information the client needs to compute a shared key with which to cipher and decipher information (RFC 5246, 50, RFC 8446, 31). This message may be omitted if there was enough information in the last transmission, to avoid overhead (RFC 5246, 50).
     \item Optionally, the server sends the client an authentication request (RFC 5246, 35, RFC 8446, 12). This request is an additional security measure requiring trust on the client side, but does incur overhead in the form of another message from the client side (RFC 8446, 12).
     \item The client sends its key exchange message. This message contains cryptographic information the server needs to compute a shared key with which to cipher and decipher information (RFC 5246, 35, 57). In TLS 1.3, all extra or nonstandard handshake communications following this are encrypted with the agreed-upon protocol for additional security (RFC 8446, 8). Barring any custom requirements, the handshake is over and the private channel is now ready for use (RFC 8446, 8).
@@ -129,5 +159,8 @@ Following the success of the above procedure, the TLS connection is now initiali
 \newpage
 
 \section{Bibliography}
+
+%https://www.ssl.com/faqs/what-is-a-certificate-authority/
+%http://www.cs.cmu.edu/~mmaass/tpm_tls/report.html
 
 \end{document}
