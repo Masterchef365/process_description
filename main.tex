@@ -19,9 +19,7 @@
 \usepackage[font={bf,sf,footnotesize},justification=justified,singlelinecheck=false]{caption}
 
 % Debug
-%\usepackage{showframe}
-
-
+\usepackage{showframe}
 
 % Section colorings
 \definecolor{sectioncolor}{HTML}{3399ff} 
@@ -77,12 +75,14 @@
 \pagenumbering{roman}
 \setcounter{page}{2}
 
-\sffamily \tableofcontents \rmfamily
+\sffamily\tableofcontents\rmfamily
 
 \newpage
+
 %% List of figures %%
 
-\sffamily \textbf{\listoffigures} \rmfamily
+\sffamily\bfseries\listoffigures\rmfamily\mdseries
+%\sffamily\textbf{\listoffigures}\rmfamily
 
 \newpage
 
@@ -91,7 +91,7 @@
 \pagenumbering{arabic}
 
 \section{Introduction}
-Transport Layer Security (TLS) is a protocol that facilitates privacy and authentication of messages (RFC 5246, 1). This document provides an overview of the TLS handshake subprocedure. This document does not cover implementation details, message transport, or specific ciphers. This document is arranged as follows: First, background information on TLS will be provided, followed by the two stages of the handshake procedure: Method Agreement, and Key Exchange \& Authentication. The conclusion will describe the utilization of the secure channel that the handshake establishes. 
+Transport Layer Security (TLS) is a protocol that facilitates privacy and authentication of messages transmitted over a network (RFC 5246, 1). This document provides an overview of the TLS handshake subprocedure. This document does not cover implementation details, message transport, specific ciphers, or application layer protocols. This document is arranged as follows: First, background information on TLS will be provided, followed by the two stages of the handshake procedure: Method Agreement, and Key Exchange \& Authentication. The conclusion will describe the utilization of the secure channel that the handshake establishes. 
 
 \section{Background information}
 TLS is a protocol used to secure private and untampered communications on the web (RFC 5246, 6, 78). For example, HTTPS is the original HTTP (HyperText Transfer Protocol) transmitted over a TLS transport instead of TCP (HTTP over TLS, 1). TLS is not a specific cipher or encryption method in itself; it is a standard container format that facilitates the use of a set of existing encryption methods (RFC 8446, 7).
@@ -146,7 +146,7 @@ The server sends its certificate and key, and the client (having verified said c
 \end{enumerate}
 
 \section{Conclusion}
-Following the success of the above procedure, the TLS connection is now initialized and ready for messaging over the TLS record protocol (RFC 8446, 71). Application-level protocols such as FTP, HTTP, SMTP and others may then utilize the record protocol to send messages transparently as if using the underlying TCP stream, but with the guarantee of encryption and authentication initialized by the handshake procedure (RFC 5246, 78).
+Following the success of the above procedure, the TLS connection is now initialized and ready for messaging. Messaging is handled over the TLS record protocol (RFC 8446, 71). Application-level protocols such as FTP, HTTP, SMTP and others may then utilize the record protocol to send messages transparently as if using the underlying TCP stream, but with the guarantee of encryption and authentication initialized by the handshake procedure (RFC 5246, 78).
 
 \newpage
 
@@ -161,6 +161,17 @@ Following the success of the above procedure, the TLS connection is now initiali
 \newpage
 
 \section{Bibliography}
+
+\begin{description}[leftmargin=!,itemindent=-15pt]
+    \item ``A Type-safe, TPM Backed TLS Infrastructure'' Type-safe, TPM Backend TLS. Carnegie Mellon University. Accessed November 15, 2019.
+    \item ``An Overview of TLS 1.3 and Q\&A'' The CloudFare Blog. CloudFare. Accessed November 16, 2019. %https://blog.cloudflare.com/tls-1-3-overview-and-q-and-a/
+    \item ``HTTP Over TLS.'' IETF Tools, May 2000. %https://tools.ietf.org/html/rfc2818.
+    \item ``What Are Certificate Authorities \& Trust Hierarchies?'' What is a Certificate Authority? Globalsign. Accessed November 14, 2019. %https://www.globalsign.com/en/ssl-information-center/what-are-certification-authorities-trust-hierarchies/.
+    \item ``The Transport Layer Security (TLS) Protocol Version 1.3.'' IETF Tools. IETF, August 2018. %https://tools.ietf.org/html/rfc8446. 
+    \item ``The Transport Layer Security (TLS) Protocol Version 1.2.'' IETF Tools. IETF, August 2008. %https://tools.ietf.org/html/rfc5246.
+    \item ``The SSL/TLS Handshake: an Overview'' Globalsign. Accessed November 14, 2019. %https://www.ssl.com/article/ssl-tls-handshake-overview/
+    \item ``Transport Layer Security'' Wikipedia. Accessed November 13, 2019. 
+\end{description}
 
 %https://www.ssl.com/faqs/what-is-a-certificate-authority/
 %http://www.cs.cmu.edu/~mmaass/tpm_tls/report.html
